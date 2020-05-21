@@ -60,7 +60,7 @@ function wploginwidget_update_cookie( $logged_in_cookie ){
     $_COOKIE[LOGGED_IN_COOKIE] = $logged_in_cookie;
 }
 add_action( ‘set_logged_in_cookie’, ‘wploginwidget_update_cookie’ );
- */
+*/
 
 /*
  * Process theme login
@@ -78,8 +78,10 @@ function wploginwidget_user_login_callback() {
     $success = '';
     $nonce = $_POST['nonce'];
 
-    if ( !wp_verify_nonce( $nonce, 'wploginwidget_user_login_action' ) )
-        die ( '<p class="error">'.__( 'Security checked, no cheatn please!', 'wploginwidget').'</p>' ); // check nonce
+    //if ( !wp_verify_nonce( $nonce, 'wploginwidget_user_login_action' ) )
+    //    die ( '<p class="error">'.__( 'Security checked, no cheatn please!', 'wploginwidget').'</p>' ); // check nonce
+    check_ajax_referer( 'wploginwidget_user_login_action', 'security' );
+
 
     $username = $wpdb->escape($_POST['log']); // SQL escape avoids sql injection..
     $password = $wpdb->escape($_POST['pwd']);
