@@ -1,66 +1,39 @@
 /*
  * login functions
- * setup source: http://www.sutanaryan.com/custom-user-login-signin-using-ajax-wordpress/
- */
-
- /*
- * login form AJAX functions
- * @event php/login.php
  */
 jQuery(document).ready(function($) {
 
+    // Show the login dialog box on click
+    $('a#show_login').on('click', function(e){
+        $('body').prepend('<div class="login_overlay"></div>');
+        $('form#login').fadeIn(500);
+        $('div.login_overlay, form#login a.close').on('click', function(){
+            $('div.login_overlay').remove();
+            $('form#login').hide();
+        });
+        e.preventDefault();
+    });
 
-	$("form#wploginwidget_loginform").submit(function(){ // on loginform submit
-
-
-		var submit = $("#wploginwidget_loginform #submit"),
-			preloader = $("#preloader"),
-			message	= $("#message"),
-			box = $("#wploginwidget_loginform"),
-			contents = {
-				action: 		'user_login',
-				nonce: 			this.wploginwidget_user_login_nonce.value,
-				log:			this.log.value,
-				pwd:			this.pwd.value,
-				remember:		this.remember.value,
-				redirection_url:	this.redirection_url.value,
-				logout_url:	this.logout_url.value
-			};
-
-			// disable button onsubmit to avoid double
-                submit.attr("disabled", "disabled").addClass('disabled');
-
-			// Display our pre-loading
-			preloader.slideDown('fast');
-
-                // JSON type so we can check for data success and redirection url.
-                $.post( wp_login.url, contents, function( data ){
-			submit.removeAttr("disabled").removeClass('disabled');
-
-			// hide pre-loader
-			preloader.slideUp('fast');
-
-			// check response data
-			if( 1 == data.success ) {
-
-				message.html( '<p class="succes">Logged in, redirecting..</p>' );
-				//box.html( '<a href="'+data.logout_url+'">Sign out</a>' );
-				window.location = data.redirection_url; // redirect to home page
-				/*
-				$(".adapptUserLogin").slideUp('fast');
-				$("li.user-sign").html('<a href="'+data.logout_url+'">Sign out</a>').addClass('signedin');
-				*/
-			} else {
-				// display return data
-				message.html( '<p class="error">' + data + '</p>' );
-			}
-
-		}, 'json');
-
-		return false;
-	});
-
-
-
+    // Perform AJAX login on form submit
+    $('form#login').on('submit', function(e){
+        $('form#login p.status').show().text(ajax_login_object.loadingmessage);
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ajax_login_object.ajaxurl,
+            data: {
+                'action': 'ajaxlogin', //calls wp_ajax_nopriv_ajaxlogin
+                'username': $('form#login #username').val(),
+                'password': $('form#login #password').val(),
+                'security': $('form#login #security').val() },
+            success: function(data){
+                $('form#login p.status').text(data.message);
+                if (data.loggedin == true){
+                    document.location.href = ajax_login_object.redirecturl;
+                }
+            }
+        });
+        e.preventDefault();
+    });
 
 });

@@ -78,12 +78,10 @@ class wp_login_widget extends WP_Widget {
                 $this->display_basic_panel();
                 break;
             case 2:
-                echo "Here comes more";
                 /**
-                 * Login & Register
+                 * Login with ajax
                  */
                 display_ajax_login();
-                display_ajax_register();
 
                 break;
             default:
@@ -347,6 +345,14 @@ function wploginwidget_js() {
 }
 
 add_action('wp_enqueue_scripts', 'wploginwidget_js');
+
+
+/*
+// Execute the action only if the user isn't logged in.
+if ( ! is_user_logged_in() ) {
+	add_action( 'init', 'ajax_login_init' );
+}
+*/
 
 
 
