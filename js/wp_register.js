@@ -7,10 +7,10 @@ jQuery(document).ready(function($) {
 
 		$("input").removeClass('faulty');
 
-		var submit = $(".wploginwidget_registrationform #submit"),
+		var submit = $("#wploginwidget_registrationform #submit"),
 			preloader = $("#preloader"),
 			message	= $("#message"),
-			check = $(".wploginwidget_registrationform #formcheck"),
+			check = $("#wploginwidget_registrationform #formcheck"),
 			contents = {
 				action: 	'user_registration',
 				nonce: 		this.wploginwidget_user_registration_nonce.value,

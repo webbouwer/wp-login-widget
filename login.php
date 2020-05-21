@@ -53,6 +53,14 @@ function display_ajax_login(){
 
 }
 
+/*
+ * Cookie problem fix https://wordpress.org/support/topic/after-ajax-login-the-new-nonce-field-is-not-returned/
+
+function wploginwidget_update_cookie( $logged_in_cookie ){
+    $_COOKIE[LOGGED_IN_COOKIE] = $logged_in_cookie;
+}
+add_action( ‘set_logged_in_cookie’, ‘wploginwidget_update_cookie’ );
+ */
 
 /*
  * Process theme login
@@ -109,6 +117,10 @@ function wploginwidget_user_login_callback() {
 }
 
 
+
+
+
+
 /*
  * Use localized data
  * @require js/wp_login.js, wp-admin/admin-ajax.php, jQuery
@@ -119,9 +131,9 @@ function wploginwidget_wp_login_js(){
 
 	wp_enqueue_script( 'wp-login-request-script', plugin_dir_url(__FILE__). 'js/wp_login.js', array( 'jquery' ) );
 	wp_localize_script( 'wp-login-request-script', 'wp_login', array(
-    'url'        => admin_url( 'admin-ajax.php' ),
-    'site_url'     => get_bloginfo('url'),
-    'theme_url' => get_bloginfo('template_directory')
+        'url'        => admin_url( 'admin-ajax.php' ),
+        'site_url'     => get_bloginfo('url'),
+        'theme_url' => get_bloginfo('template_directory')
 	));
 
 }

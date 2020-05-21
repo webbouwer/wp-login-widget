@@ -22,9 +22,14 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'FEEDBOARD_VERSION', '1.0.0' );
 
-
+/*
+ * Load language (if available)
+ */
 load_plugin_textdomain('wploginwidget', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
+/*
+ * Include code files
+ */
 require_once plugin_dir_path( __FILE__ ) . '/login.php'; // login ajax functions
 require_once plugin_dir_path( __FILE__ ) . '/register.php'; // login ajax functions
 
@@ -35,9 +40,12 @@ function wp_login_widget_load() {
 add_action( 'widgets_init', 'wp_login_widget_load' );
 
 
-
+/*
+ * Main Widget Class
+ * a basic login form with redirect
+ * or ajax form from code files
+ */
 class wp_login_widget extends WP_Widget {
-
 
 	function __construct() {
 		parent::__construct(
@@ -55,7 +63,6 @@ class wp_login_widget extends WP_Widget {
 
 		if(isset($instance['boxtype']) && $instance['boxtype'] !='' )
 			$paneltype = $instance['boxtype'];
-
 
 		$title = apply_filters( 'widget_title', $instance['title'] );
 
@@ -266,10 +273,6 @@ class wp_login_widget extends WP_Widget {
 
     } // end userpanel
 
-
-
-
-
 	// Widget Backend
 	public function form( $instance ) {
 		if ( isset( $instance[ 'title' ] ) ) {
@@ -311,10 +314,6 @@ class wp_login_widget extends WP_Widget {
 	}
 
 
-
-
-
-
 	// Updating widget replacing old instances with new
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
@@ -322,10 +321,6 @@ class wp_login_widget extends WP_Widget {
 		$instance['boxtype'] = ( ! empty( $new_instance['boxtype'] ) ) ? $new_instance['boxtype'] : 0;
 		return $instance;
 	}
-
-
-
-
 
 } // Class ends here
 
@@ -352,8 +347,6 @@ function wploginwidget_js() {
 }
 
 add_action('wp_enqueue_scripts', 'wploginwidget_js');
-
-
 
 
 

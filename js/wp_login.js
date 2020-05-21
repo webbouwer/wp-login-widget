@@ -13,10 +13,10 @@ jQuery(document).ready(function($) {
 	$("form#wploginwidget_loginform").submit(function(){ // on loginform submit
 
 
-		var submit = $(".wploginwidget_loginform #submit"),
+		var submit = $("#wploginwidget_loginform #submit"),
 			preloader = $("#preloader"),
 			message	= $("#message"),
-			box = $(".wploginwidget_loginform"),
+			box = $("#wploginwidget_loginform"),
 			contents = {
 				action: 		'user_login',
 				nonce: 			this.wploginwidget_user_login_nonce.value,
