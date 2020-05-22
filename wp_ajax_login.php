@@ -14,12 +14,12 @@ function display_ajax_form(){
     global $wp;
     $current_url = home_url( add_query_arg( array(), $wp->request ) );
     $logout_url = wp_logout_url( get_permalink() );
-    $ajax_nonce = wp_create_nonce( "rs_user_login_nonce" );
+    $ajax_nonce = wp_create_nonce( "wp_ajax_login_nonce" );
 
     echo '<form id="loginform" action="login" method="post">';
 
     if ( function_exists( 'wp_nonce_field' ) )
-        wp_nonce_field( 'rs_user_login_action', 'rs_user_login_nonce' );
+        wp_nonce_field( 'wp_ajax_login_action', 'wp_ajax_login_nonce' );
 
     echo '<div class="alert-box"></div>';
     echo '<label for="log">Username</label>';
@@ -38,23 +38,23 @@ function display_ajax_form(){
 function wp_login_register_scripts(){
 
 // localize wp-ajax, notice the path to our theme-ajax.js file
-wp_enqueue_script( 'rsclean-request-script', plugin_dir_url(__FILE__) . '/js/wp_ajax_login.js', array( 'jquery' ) );
-wp_localize_script( 'rsclean-request-script', 'theme_ajax', array(
+wp_enqueue_script( 'wp_login_ajax_script', plugin_dir_url(__FILE__) . '/js/wp_ajax_login.js', array( 'jquery' ) );
+wp_localize_script( 'wp_login_ajax_script', 'plugin_ajax', array(
     'url'        => admin_url( 'admin-ajax.php' ),
     'site_url'     => get_bloginfo('url'),
     'theme_url' => plugin_dir_url(__FILE__)
 ) );
 
-add_action( 'wp_ajax_nopriv_user_login', 'rs_user_login_callback' );
-add_action( 'wp_ajax_user_login', 'rs_user_login_callback' );
+add_action( 'wp_ajax_nopriv_frontend_login', 'wp_ajax_login_callback' );
+add_action( 'wp_ajax_frontend_login', 'wp_ajax_login_callback' );
 
 }
-add_action('init', 'wp_login_register_scripts');
+add_action('widgets_init', 'wp_login_register_scripts');
 
 /*
  *	@desc	Process theme login
  */
-function rs_user_login_callback() {
+function wp_ajax_login_callback() {
 
 	global $wpdb;
 
@@ -63,10 +63,8 @@ function rs_user_login_callback() {
 	$error = '';
 	$success = '';$nonce = $_POST['nonce'];
 
-	if ( ! wp_verify_nonce( $nonce, 'rs_user_login_action' ) )
+	if ( ! wp_verify_nonce( $nonce, 'wp_ajax_login_action' ) )
 		die ( '<p class="error">Security checked!, Cheatn huh?</p>' );
-
-    // check_ajax_referer( 'rs_user_login_action', 'rs_user_login_nonce' );
 
 	//We shall SQL escape all inputs to avoid sql injection.
 	$username = $wpdb->escape($_POST['log']);
@@ -92,6 +90,8 @@ function rs_user_login_callback() {
 			/* not working for admin dashboard..
             wp_set_current_user( $user->ID, $username );
 			do_action('set_current_user');
+
+            https://stackoverflow.com/questions/30775382/how-to-log-in-and-set-current-user-on-wordpress-with-php
             */
             $curr_user=  new WP_User( $user->ID , $user->user_login );
             wp_set_auth_cookie( $user->ID );

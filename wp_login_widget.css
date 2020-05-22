@@ -1,0 +1,11 @@
+#userpanel ul,
+#userpanel li,
+{
+    display:block !important;
+    visibility: visible;
+}
+
+.widget_wp_login_widget
+{
+    min-height:200px !important;
+}

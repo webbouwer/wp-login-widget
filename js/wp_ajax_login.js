@@ -11,8 +11,8 @@ jQuery(document).ready(function($) {
 			preloader = $("#loginform .preloader-box"),
 			message	= $("#loginform .alert-box"),
 			contents = {
-				action: 		'user_login',
-				nonce: 			this.rs_user_login_nonce.value,
+				action: 		'frontend_login',
+				nonce: 			this.wp_ajax_login_nonce.value,
 				log:			this.log.value,
 				pwd:			this.pwd.value,
 				remember:		this.remember.value,
@@ -26,7 +26,7 @@ jQuery(document).ready(function($) {
 		preloader.css({'visibility':'visible'});
 
 		// on my previous tutorial it just simply returned HTML but this time I decided to use JSON type so we can check for data success and redirection url.
-        $.post( theme_ajax.url, contents, function( data ){
+        $.post( plugin_ajax.url, contents, function( data ){
 
 			submit.removeAttr("disabled").removeClass('disabled');
 
@@ -50,6 +50,7 @@ jQuery(document).ready(function($) {
         e.preventDefault();
 		return false;
 	});
+
 });
 
 
