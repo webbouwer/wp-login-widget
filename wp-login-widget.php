@@ -31,7 +31,6 @@ load_plugin_textdomain('wploginwidget', false, basename( dirname( __FILE__ ) ) .
  * Include code files
  */
 require_once plugin_dir_path( __FILE__ ) . '/login.php'; // login ajax functions
-require_once plugin_dir_path( __FILE__ ) . '/register.php'; // login ajax functions
 
 /* Login Frontend Widget */
 function wp_login_widget_load() {
@@ -39,6 +38,12 @@ function wp_login_widget_load() {
 }
 add_action( 'widgets_init', 'wp_login_widget_load' );
 
+/*
+function add_lost_password_link() {
+    wp_nonce_field( 'ajax-login-nonce', 'security' );
+}
+add_action( 'login_form_middle', 'add_lost_password_link' );
+*/
 
 /*
  * Main Widget Class
@@ -81,7 +86,7 @@ class wp_login_widget extends WP_Widget {
                 /**
                  * Login with ajax
                  */
-                display_ajax_login();
+                $this->display_basic_panel(1);
 
                 break;
             default:
@@ -100,10 +105,9 @@ class wp_login_widget extends WP_Widget {
      * source https://digwp.com/2010/12/login-register-password-code/
      */
 
-    public function display_basic_panel(){
+    public function display_basic_panel($type = false){
 
         echo '<div id="userpanel">';
-
         global $user_ID, $user_identity; wp_get_current_user(); //get_currentuserinfo();
         // MU switch_to_blog( 1 );
         $regallowed = get_option( 'users_can_register' );
@@ -151,11 +155,33 @@ class wp_login_widget extends WP_Widget {
                 }
 
                 // display login form
-                wp_login_form();
+                if($type != 1){
+                    wp_login_form();
+                }else{
+
+                    ?>
+                    <form id="loginform" action="login" method="post">
+        <h1>Site Login</h1>
+        <p class="status"></p>
+        <label for="log">Username</label>
+        <input type="text" name="log" id="user_login" class="input" value="" size="20">
+        <label for="pwd">Password</label>
+        <input type="password" name="pwd" id="user_pass" class="input" value="" size="20">
+        <label><input name="remember" type="checkbox" id="remember" value="0"> Remember Me</label>
+        <input class="submit_button" type="submit" value="Login" name="submit">
+        <input type="hidden" name="redirection_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
+        <input type="hidden" name="logout_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
+
+        <?php wp_nonce_field( 'ajax-login-nonce', 'security' ); ?>
+    </form>
+                    <?
+                }
 
                 echo '<div class="resetlogin"><span>'.__( 'Forgot password?', 'wploginwidget' ).'</span></div>';
 
                 do_action('login_form', 'login');
+
+
 
                 //echo do_shortcode( '' );
 
@@ -345,15 +371,6 @@ function wploginwidget_js() {
 }
 
 add_action('wp_enqueue_scripts', 'wploginwidget_js');
-
-
-/*
-// Execute the action only if the user isn't logged in.
-if ( ! is_user_logged_in() ) {
-	add_action( 'init', 'ajax_login_init' );
-}
-*/
-
 
 
 /* DIY
