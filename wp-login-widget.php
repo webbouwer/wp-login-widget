@@ -30,20 +30,13 @@ load_plugin_textdomain('wploginwidget', false, basename( dirname( __FILE__ ) ) .
 /*
  * Include code files
  */
-require_once plugin_dir_path( __FILE__ ) . '/login.php'; // login ajax functions
+require_once plugin_dir_path( __FILE__ ) . '/wp_ajax_login.php'; // login ajax functions
 
 /* Login Frontend Widget */
 function wp_login_widget_load() {
     register_widget( 'wp_login_widget' );
 }
 add_action( 'widgets_init', 'wp_login_widget_load' );
-
-/*
-function add_lost_password_link() {
-    wp_nonce_field( 'ajax-login-nonce', 'security' );
-}
-add_action( 'login_form_middle', 'add_lost_password_link' );
-*/
 
 /*
  * Main Widget Class
@@ -157,29 +150,33 @@ class wp_login_widget extends WP_Widget {
                 // display login form
                 if($type != 1){
                     wp_login_form();
+                     do_action('login_form', 'login');
+
                 }else{
 
+                    display_ajax_form();
+                    /*
                     ?>
                     <form id="loginform" action="login" method="post">
-        <h1>Site Login</h1>
-        <p class="status"></p>
-        <label for="log">Username</label>
-        <input type="text" name="log" id="user_login" class="input" value="" size="20">
-        <label for="pwd">Password</label>
-        <input type="password" name="pwd" id="user_pass" class="input" value="" size="20">
-        <label><input name="remember" type="checkbox" id="remember" value="0"> Remember Me</label>
-        <input class="submit_button" type="submit" value="Login" name="submit">
-        <input type="hidden" name="redirection_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
-        <input type="hidden" name="logout_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
 
-        <?php wp_nonce_field( 'ajax-login-nonce', 'security' ); ?>
-    </form>
-                    <?
+                        <p class="status"></p>
+                        <label for="log">Username</label>
+                        <input type="text" name="log" id="user_login" class="input" value="" size="20">
+                        <label for="pwd">Password</label>
+                        <input type="password" name="pwd" id="user_pass" class="input" value="" size="20">
+                        <label><input name="remember" type="checkbox" id="remember" value="0"> Remember Me</label>
+                        <input class="submit_button" type="submit" value="Login" name="submit">
+                        <input type="hidden" name="redirection_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
+                        <input type="hidden" name="logout_url" value="https://webdesigndenhaag.net/wp/pluginlab/">
+
+                        <?php wp_nonce_field( 'ajax-login-nonce', 'security' ); ?>
+                    </form>
+                    <? */
                 }
 
                 echo '<div class="resetlogin"><span>'.__( 'Forgot password?', 'wploginwidget' ).'</span></div>';
 
-                do_action('login_form', 'login');
+
 
 
 

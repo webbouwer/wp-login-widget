@@ -1,6 +1,64 @@
 /*
- * login functions
+ * ajax login functions
  */
+
+
+jQuery(document).ready(function($) {
+	// for user login form
+	$("form#loginform").submit(function(e){
+
+        var submit = $("#loginform #submit"),
+			preloader = $("#loginform .preloader-box"),
+			message	= $("#loginform .alert-box"),
+			contents = {
+				action: 		'user_login',
+				nonce: 			this.rs_user_login_nonce.value,
+				log:			this.log.value,
+				pwd:			this.pwd.value,
+				remember:		this.remember.value,
+				redirection_url:	this.redirection_url.value
+			};
+
+		// disable button onsubmit to avoid double submision
+		submit.attr("disabled", "disabled").addClass('disabled');
+
+		// Display our pre-loading
+		preloader.css({'visibility':'visible'});
+
+		// on my previous tutorial it just simply returned HTML but this time I decided to use JSON type so we can check for data success and redirection url.
+        $.post( theme_ajax.url, contents, function( data ){
+
+			submit.removeAttr("disabled").removeClass('disabled');
+
+			// hide pre-loader
+			preloader.css({'visibility':'hidden'});
+
+			// check response data
+			if( 1 == data.success ) {
+				// redirect to home page
+                message.html( '<p class="error">Signed on</p>' );
+				window.location = data.redirection_url;
+
+
+			} else {
+				// display return data
+				message.html( '<p class="error">' + data + '</p>' );
+			}
+
+		}, 'json');
+
+        e.preventDefault();
+		return false;
+	});
+});
+
+
+
+
+
+
+
+/*
 jQuery(document).ready(function($) {
 
  $("form#loginform").submit(function(e){ // on loginform submit
@@ -39,10 +97,7 @@ jQuery(document).ready(function($) {
 				message.html( '<p class="succes">Logged in, redirecting..</p>' ).show();
 				//box.html( '<a href="'+data.logout_url+'">Sign out</a>' );
 				window.location = data.redirection_url; // redirect to home page
-				/*
-				$(".adapptUserLogin").slideUp('fast');
-				$("li.user-sign").html('<a href="'+data.logout_url+'">Sign out</a>').addClass('signedin');
-				*/
+
 			} else {
 				// display return data
 				message.html( '<p class="error">' + data + '</p>' ).show();
@@ -54,9 +109,6 @@ jQuery(document).ready(function($) {
 	});
 
 
-
-
-/*
     // Perform AJAX login on form submit
     $('form#loginform').on('submit', function(e){
 
@@ -84,5 +136,3 @@ jQuery(document).ready(function($) {
         e.preventDefault();
     });
 */
-
-});
