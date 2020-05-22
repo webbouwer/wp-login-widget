@@ -2,6 +2,7 @@ jQuery(function($) {
 		$(document).ready(function(){
 
 		$('ul.tabcontainer li').hide();
+        $('form#loginform p.status').hide();
         //$("ul.tabcontainer li").eq(0).slideDown();
 
 		$('ul.tabmenu li,div.resetlogin').on('click', function(){
