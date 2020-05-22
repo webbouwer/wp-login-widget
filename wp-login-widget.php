@@ -268,11 +268,11 @@ class wp_login_widget extends WP_Widget {
 		$boxtype = $instance[ 'boxtype' ];
 		}
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'boxtype' ); ?>">Box type:</label>
+		<p><label for="<?php echo $this->get_field_id( 'boxtype' ); ?>">Login type:</label>
 		<select name="<?php echo $this->get_field_name( 'boxtype' ); ?>" id="<?php echo $this->get_field_id( 'boxtype' ); ?>">
 		<option value="0" <?php selected( $boxtype, 0 ); ?>>Default</option>
 		<option value="1" <?php selected( $boxtype, 1 ); ?>>Basic</option>
-		<option value="2" <?php selected( $boxtype, 2 ); ?>>Smooth</option>
+		<option value="2" <?php selected( $boxtype, 2 ); ?>>AJAX</option>
 		</select>
 		</p>
 
